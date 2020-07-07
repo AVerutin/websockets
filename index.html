@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Websocket клиент</title>
+    </head>
+
+    <body>
+
+    </body>
+</html>
+
+<script>
+    onload = function() {
+        var ws = new WebSocket('ws://localhost:8080');
+        ws.onmessage = function(event) {
+            alert(event.data);
+        }
+    }
+</script>

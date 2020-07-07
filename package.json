@@ -4,7 +4,8 @@
   "description": "WebSocets server and client",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "node --inspect server.js",
+    "clien": "node --inspect client.js"
   },
   "keywords": [
     "websockets"
@@ -12,6 +13,7 @@
   "author": "AlexV <alexbroot@mail.ru>",
   "license": "ISC",
   "dependencies": {
+    "config": "^3.3.1",
     "ws": "^7.3.1"
   }
 }
