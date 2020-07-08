@@ -1,11 +1,13 @@
 {
     "configurations": [
         {
-            "name": "Attach to Chrome",
+            "name": "Attach",
             "port": 9229,
             "request": "attach",
-            "type": "pwa-chrome",
-            "webRoot": "${workspaceFolder}"
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
         },
         {
             "name": "Launch client",

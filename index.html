@@ -2,18 +2,94 @@
 <html>
     <head>
         <title>Websocket клиент</title>
+        <style>
+            table {
+                width: 450px;
+                border-width: 1px;
+                border-style: solid;
+                margin-top: 15px;
+            }
+            .login {
+                color: darkblue;
+                font-size: 14px;
+                font-weight: bold;
+                font-style: italic;
+                margin-right: 5px;
+            }
+            .incoming {
+                text-align: left;
+                border-radius: 5px;
+                color: darkgreen;
+                font-size: 14px;
+                font-weight: bold;
+                border-color: darkgreen;
+                border-width: 1px;
+                border-style: solid;
+                margin-left: 5px;
+            }
+            .outgoing {
+                text-align: right;
+                border-radius: 5px;
+                border-color: darkslategray;
+                border-width: 1px;
+                border-style: solid;
+                font-weight: bold;
+                font-size: 14px;
+                color: darkslategray;
+                margin-left: 5px;
+            }
+        </style>
     </head>
 
     <body>
-
+        <form name="push">
+            <input type="hidden" name="userid" />
+            <input type="text" name="login" />
+            <input type="text" name= "message" />
+            <input type="submit" vаluе="Отnравить" />
+        </form>
+        <table id="messages">
+            <tbody>
+                <tr><th>Список сообщений</th></tr>
+            </tbody>
+        </table>
     </body>
 </html>
 
 <script>
-    onload = function() {
-        var ws = new WebSocket('ws://localhost:8080');
-        ws.onmessage = function(event) {
-            alert(event.data);
+    ws = new WebSocket('ws://localhost:8080');
+    var jsonMsg = {};
+
+    function addRow(msg, type){
+        var tbl = document.getElementById ("messages"); // Получаем таблицу
+        var ro = tbl.insertRow (1);                     // Вставляем новую строку сверху
+        var ce = ro.insertCell (0);                     // Добавляем ячейку в начало строки
+        ce.innerHTML = msg;                             // Устанавливаем текст в ячейку
+        if (type == 'outgoing') {
+            ce.style.textAlign = 'right';
         }
     }
+    
+    onload = function() {
+        ws.onmessage = function(event) {
+            // Преобразуем входящее сообщение от сервера
+            var recived = JSON.parse(event.data);
+            var login = '<span class="login">' + recived.login + ":</span>";
+            var messg = '<span class="incoming">' + recived.text + "</span>";
+            addRow(login + messg, 'incoming');
+        }
+    }
+
+    document.forms.push.onsubmit = function() {
+        jsonMsg.login = this.login.value;
+        jsonMsg.text = this.message.value;
+        var mssg = '<span class="outgoing">' + this.message.value + "</span>";
+        addRow(mssg, 'outgoing');
+        ws.send(JSON.stringify(jsonMsg));
+        this.message.value = '';
+        return false;
+    };
+
+
+
 </script>
