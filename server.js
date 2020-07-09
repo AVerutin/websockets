@@ -18,6 +18,9 @@ wsServer.on('connection', function connection(ws) {
 
     client.ID = id;
     client.Socket = ws;
+    client.Connected = true;
+    client.Status = 'Online';
+    client.LastConnected = new Date().toLocaleString();
 
     clients.push(client);
 
@@ -39,6 +42,12 @@ wsServer.on('connection', function connection(ws) {
     });
 
     ws.on('close', function close() {
-        console.log('Connection closed');
+        msg = `${client.login} was disconnected`;
+        console.log(msg);
+        for (client of clients) {
+            if (client.ID != id) {
+                client.Socket.send(msg);
+            }
+        }
     })
 });
